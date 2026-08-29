@@ -1,1 +1,412 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام وسائط الغامدي لإصلاح الجنوط</title>
+    <style>
+        :root { --main-bg: #f0f2f5; --card-bg: #ffffff; --primary: #0d6efd; --danger: #dc3545; --success: #198754; --text: #212529; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--main-bg); color: var(--text); padding-bottom: 30px; }
+        .header { background-color: #1b263b; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 18px; }
+        .container { max-width: 900px; margin: 15px auto; padding: 0 10px; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; background: var(--primary); color: white; width: 100%; transition: 0.2s; }
+        .btn:disabled { background: #ccc; }
+        .btn-danger { background: var(--danger); }
+        .btn-success { background: var(--success); }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        .grid-upload { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .upload-card { border: 2px dashed #bbb; padding: 15px; text-align: center; border-radius: 8px; background: #fafafa; }
+        .upload-card input { display: none; }
+        .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+        .media-item { position: relative; border-radius: 8px; overflow: hidden; background: #000; height: 130px; }
+        .media-item img, .media-item video { width: 100%; height: 100%; object-fit: cover; }
+        .badge-new { position: absolute; top: 5px; right: 5px; background: #ffc107; color: #000; font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+        .checkbox-select { position: absolute; top: 5px; left: 5px; width: 20px; height: 20px; }
+        .admin-nav { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 5px; }
+        .admin-nav button { flex: none; width: auto; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+        table th, table td { border: 1px solid #dee2e6; padding: 8px; text-align: right; }
+        table th { background: #e9ecef; }
+        .hidden { display: none !important; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+    </style>
+</head>
+<body>
 
+    <div class="header">
+        <h1 id="appTitle">نظام وسائط الغامدي</h1>
+        <button id="logoutBtn" class="btn btn-danger hidden" style="width:auto; padding:5px 12px;" onclick="logout()">خروج</button>
+    </div>
+
+    <div class="container">
+        <!-- 1. واجهة إعداد رابط الـ API لأول مرة -->
+        <div id="apiSetupCard" class="card hidden">
+            <h3>ربط نظام السكربت (Google Apps Script)</h3>
+            <p style="font-size: 12px; color: #666; margin: 8px 0;">أدخل رابط الـ Web App الخاص بـ Executable المعمول له نشر (Deploy):</p>
+            <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%; padding:10px; margin-bottom:10px;">
+            <button class="btn" onclick="saveApiUrl()">حفظ الربط والبدء</button>
+        </div>
+
+        <!-- 2. بطاقة تسجيل الدخول -->
+        <div id="loginCard" class="card hidden">
+            <h2 style="text-align:center; margin-bottom:15px;">تسجيل الدخول</h2>
+            <div style="margin-bottom:10px;">
+                <label>اسم المستخدم</label>
+                <input type="text" id="username" style="width:100%; padding:10px; margin-top:5px;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label>كلمة المرور</label>
+                <input type="password" id="password" style="width:100%; padding:10px; margin-top:5px;">
+            </div>
+            <button class="btn" id="loginBtn" onclick="login()">دخول</button>
+            <p id="loginMsg" style="color:red; font-size:13px; margin-top:10px; text-align:center;"></p>
+        </div>
+
+        <!-- 3. واجهة المشترك الرئيسية المعرض والرفع -->
+        <div id="userDashboard" class="hidden">
+            <div class="grid-upload" id="uploadButtonsContainer">
+                <div class="upload-card">
+                    <h4>فيديو للتصميم والتعديل</h4>
+                    <button class="btn btn-outline" style="margin-top:8px;" onclick="triggerFileSelect('vid_design')">تحميل فيديو</button>
+                    <input type="file" id="vid_design" accept="video/*" multiple onchange="uploadFiles(this, 'فيديو للتصميم والتعديل')">
+                </div>
+                <div class="upload-card">
+                    <h4>فيديو جاهز للنشر</h4>
+                    <button class="btn btn-outline" style="margin-top:8px;" onclick="triggerFileSelect('vid_ready')">تحميل فيديو</button>
+                    <input type="file" id="vid_ready" accept="video/*" multiple onchange="uploadFiles(this, 'فيديو جاهز للنشر')">
+                </div>
+                <div class="upload-card">
+                    <h4>صور للتصميم والتعديل</h4>
+                    <button class="btn btn-outline" style="margin-top:8px;" onclick="triggerFileSelect('img_design')">تحميل صور</button>
+                    <input type="file" id="img_design" accept="image/*" multiple onchange="uploadFiles(this, 'صور للتصميم والتعديل')">
+                </div>
+                <div class="upload-card">
+                    <h4>صور جاهزة للنشر</h4>
+                    <button class="btn btn-outline" style="margin-top:8px;" onclick="triggerFileSelect('img_ready')">تحميل صور</button>
+                    <input type="file" id="img_ready" accept="image/*" multiple onchange="uploadFiles(this, 'صور جاهزة للنشر')">
+                </div>
+            </div>
+
+            <div id="uploadStatus" class="card hidden" style="background:#e7f1ff; color:#0c5460;">
+                <p id="uploadStatusText">جاري الرفع...</p>
+            </div>
+
+            <!-- أقسام المعرض -->
+            <div id="galleryContainer"></div>
+        </div>
+
+        <!-- 4. لوحة تحكم المدير الكاملة -->
+        <div id="adminDashboard" class="hidden">
+            <div class="admin-nav">
+                <button class="btn" onclick="showAdminTab('usersTab')">إدارة المشتركين (15)</button>
+                <button class="btn btn-outline" onclick="showAdminTab('whatsappTab')">إشعارات WhatsApp</button>
+                <button class="btn btn-outline" onclick="showAdminTab('logsTab')">سجل العمليات</button>
+            </div>
+
+            <div id="usersTab" class="card admin-tab">
+                <h3>إضافة / تعديل مشترك</h3>
+                <form id="userForm" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+                    <input type="text" id="adminUsername" placeholder="اسم المستخدم" style="padding:8px;">
+                    <input type="text" id="adminDisplayName" placeholder="الاسم الظاهر" style="padding:8px;">
+                    <input type="password" id="adminPassword" placeholder="كلمة المرور" style="padding:8px;">
+                    <button type="button" class="btn btn-success" onclick="saveUser()">حفظ المشترك</button>
+                </form>
+
+                <h3 style="margin-top:20px;">قائمة المشتركين</h3>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الاسم الظاهر</th>
+                                <th>اسم المستخدم</th>
+                                <th>الحالة</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="logsTab" class="card admin-tab hidden">
+                <h3>سجل العمليات الأخير</h3>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>التاريخ والوقت</th>
+                                <th>المستخدم</th>
+                                <th>العملية</th>
+                                <th>الملف / التفاصيل</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="whatsappTab" class="card admin-tab hidden">
+                <h3>إعدادات إشعارات WhatsApp</h3>
+                <div id="whatsappSettingsList" style="margin-top:15px; display:flex; flex-direction:column; gap:10px;">
+                    <label><input type="checkbox" id="notify_UPLOAD"> إشعار رفع ملف جديد</label>
+                    <label><input type="checkbox" id="notify_DELETE"> إشعار حذف ملف</label>
+                    <label><input type="checkbox" id="notify_MOVE"> إشعار نقل ملف</label>
+                    <label><input type="checkbox" id="notify_SHARE"> إشعار مشاركة رابط</label>
+                </div>
+                <button class="btn btn-success" style="margin-top:15px;" onclick="saveWhatsappSettings()">حفظ إعدادات الإشعارات</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة عرض الوسائط الفردية (Modal) -->
+    <div id="mediaModal" class="modal hidden">
+        <div class="modal-content">
+            <div id="modalMediaPreview" style="width:100%; height:250px; background:#000; border-radius:8px; overflow:hidden;"></div>
+            <h4 id="modalFileName" style="margin:10px 0; word-break:break-all;"></h4>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                <button class="btn btn-success" id="btnDownloadSingle">تنزيل</button>
+                <button class="btn btn-outline" id="btnShareSingle">مشاركة الرابط</button>
+                <button class="btn btn-danger" id="btnDeleteSingle">حذف</button>
+            </div>
+            <button class="btn btn-outline" style="margin-top:10px;" onclick="closeModal()">إغلاق</button>
+        </div>
+    </div>
+
+    <script>
+        let API_URL = localStorage.getItem('GAS_API_URL') || '';
+        let currentUser = JSON.parse(sessionStorage.getItem('currentUser')) || null;
+        let currentMediaList = [];
+
+        window.onload = function() {
+            if (!API_URL) {
+                document.getElementById('apiSetupCard').classList.remove('hidden');
+            } else if (currentUser) {
+                initApp();
+            } else {
+                document.getElementById('loginCard').classList.remove('hidden');
+            }
+        };
+
+        function saveApiUrl() {
+            const url = document.getElementById('apiUrlInput').value.trim();
+            if (url) {
+                localStorage.setItem('GAS_API_URL', url);
+                API_URL = url;
+                document.getElementById('apiSetupCard').classList.add('hidden');
+                document.getElementById('loginCard').classList.remove('hidden');
+            }
+        }
+
+        async function apiCall(action, payload = {}) {
+            payload.userId = currentUser ? currentUser.userId : null;
+            payload.sessionToken = currentUser ? currentUser.sessionToken : null;
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({ action: action, payload: payload })
+            });
+            return await res.json();
+        }
+
+        async function login() {
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value;
+            const msg = document.getElementById('loginMsg');
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            msg.innerText = "جاري التحقق...";
+
+            try {
+                const res = await apiCall('login', { username: u, password: p });
+                if (res.success) {
+                    currentUser = res.user;
+                    sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    document.getElementById('loginCard').classList.add('hidden');
+                    initApp();
+                } else {
+                    msg.innerText = res.message;
+                }
+            } catch (e) {
+                msg.innerText = "تعذر الاتصال بالخادم.";
+            }
+            btn.disabled = false;
+        }
+
+        function logout() {
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'main.html';
+        }
+
+        function initApp() {
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            if (currentUser.role === 'ADMIN') {
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                document.getElementById('userDashboard').classList.remove('hidden');
+                loadAdminData();
+            } else {
+                document.getElementById('userDashboard').classList.remove('hidden');
+            }
+            loadDashboard();
+        }
+
+        async function loadDashboard() {
+            const res = await apiCall('getDashboardData');
+            if (res.success) {
+                currentMediaList = res.media;
+                renderGallery(res.media, res.sections, res.permissions);
+                applyPermissionsUI(res.permissions);
+            } else {
+                alert(res.message);
+                logout();
+            }
+        }
+
+        function applyPermissionsUI(perms) {
+            if (!perms.Upload) document.getElementById('uploadButtonsContainer').classList.add('hidden');
+        }
+
+        function renderGallery(media, sections, perms) {
+            const container = document.getElementById('galleryContainer');
+            container.innerHTML = '';
+
+            sections.forEach(sec => {
+                const secMedia = media.filter(m => m.section === sec);
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<h3>${sec} (${secMedia.length})</h3><div class="media-grid" id="grid_${sec}"></div>`;
+                container.appendChild(card);
+
+                const grid = card.querySelector('#grid_' + sec);
+                secMedia.forEach(m => {
+                    const item = document.createElement('div');
+                    item.className = 'media-item';
+                    const isVid = m.mimeType.includes('video');
+                    item.innerHTML = `
+                        ${m.isNew ? '<span class="badge-new">✨ جديد</span>' : ''}
+                        ${isVid ? `<video src="${m.url}"></video>` : `<img src="${m.url}">`}
+                    `;
+                    item.onclick = () => openMediaModal(m, perms);
+                    grid.appendChild(item);
+                });
+            });
+        }
+
+        function triggerFileSelect(id) { document.getElementById(id).click(); }
+
+        async function uploadFiles(input, folderName) {
+            const files = Array.from(input.files);
+            if (!files.length) return;
+
+            const status = document.getElementById('uploadStatus');
+            const statusText = document.getElementById('uploadStatusText');
+            status.classList.remove('hidden');
+
+            let processedFiles = [];
+            for (let i = 0; i < files.length; i++) {
+                statusText.innerText = `جاري تجهيز الملف (${i+1}/${files.length})...`;
+                const base64 = await convertBase64(files[i]);
+                processedFiles.push({ name: files[i].name, mimeType: files[i].type, base64: base64 });
+            }
+
+            statusText.innerText = "جاري الحفظ في Google Drive...";
+            const res = await apiCall('uploadFiles', { targetFolder: folderName, files: processedFiles });
+            status.classList.add('hidden');
+            alert(res.message);
+            loadDashboard();
+        }
+
+        function convertBase64(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function openMediaModal(media, perms) {
+            apiCall('markAsViewed', { fileId: media.id });
+            const modal = document.getElementById('mediaModal');
+            const preview = document.getElementById('modalMediaPreview');
+            document.getElementById('modalFileName').innerText = media.name;
+
+            const isVid = media.mimeType.includes('video');
+            preview.innerHTML = isVid ? `<video src="${media.url}" controls style="width:100%; height:100%;"></video>` : `<img src="${media.url}" style="width:100%; height:100%; object-fit:contain;">`;
+
+            document.getElementById('btnDownloadSingle').style.display = perms.Download ? 'block' : 'none';
+            document.getElementById('btnShareSingle').style.display = perms.Share ? 'block' : 'none';
+            document.getElementById('btnDeleteSingle').style.display = perms.Delete ? 'block' : 'none';
+
+            document.getElementById('btnDownloadSingle').onclick = () => window.open(media.downloadUrl);
+            document.getElementById('btnShareSingle').onclick = () => {
+                navigator.clipboard.writeText(media.url);
+                apiCall('shareFile', { fileName: media.name });
+                alert('تم نسخ رابط المشاركة!');
+            };
+            document.getElementById('btnDeleteSingle').onclick = async () => {
+                if (confirm('هل أنت متأكد من الحذف؟')) {
+                    await apiCall('deleteFiles', { fileIds: [media.id] });
+                    closeModal();
+                    loadDashboard();
+                }
+            };
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() { document.getElementById('mediaModal').classList.add('hidden'); }
+
+        function showAdminTab(tabId) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+        }
+
+        async function loadAdminData() {
+            const res = await apiCall('adminGetUsers');
+            if (res.success) {
+                const tbody = document.getElementById('usersTableBody');
+                tbody.innerHTML = '';
+                res.users.forEach(u => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${u.displayName}</td>
+                            <td>${u.username}</td>
+                            <td>${u.status}</td>
+                            <td>
+                                <button class="btn btn-danger" style="padding:2px 5px; font-size:11px;" onclick="changeStatus('${u.userId}', '${u.status === 'ACTIVE' ? 'BLOCKED' : 'ACTIVE'}')">${u.status === 'ACTIVE' ? 'حظر' : 'تفعيل'}</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            const logsRes = await apiCall('adminGetLogs');
+            if (logsRes.success) {
+                const tbody = document.getElementById('logsTableBody');
+                tbody.innerHTML = '';
+                logsRes.logs.forEach(l => {
+                    tbody.innerHTML += `<tr><td>${l.date}</td><td>${l.user}</td><td>${l.action}</td><td>${l.file} ${l.target}</td></tr>`;
+                });
+            }
+        }
+
+        async function saveUser() {
+            const u = document.getElementById('adminUsername').value;
+            const d = document.getElementById('adminDisplayName').value;
+            const p = document.getElementById('adminPassword').value;
+            const res = await apiCall('adminSaveUser', { username: u, displayName: d, password: p });
+            alert(res.message);
+            loadAdminData();
+        }
+
+        async function changeStatus(uId, status) {
+            const res = await apiCall('adminUpdateStatus', { targetUserId: uId, status: status });
+            alert(res.message);
+            loadAdminData();
+        }
+    </script>
+</body>
+</html>
