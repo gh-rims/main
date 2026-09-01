@@ -58,7 +58,6 @@ function validateSessionOnServer(username, password) {
     }
   }).catch(err => {
     console.error("خطأ أثناء التحقق من الجلسة:", err);
-    // في حال خطأ في الشبكة نسحب البيانات المخزنة محلياً مؤقتاً
     if (currentUser) initUIByUserRole();
     else clearSessionAndShowLogin();
   });
@@ -99,7 +98,6 @@ function initUIByUserRole() {
 
   // التحكم بشاشة الرئيسية (index.html)
   if (document.getElementById("uploadSection")) {
-    // قسم الرفع: فقط إذا كان مصرحاً له بالرفع
     const uploadSection = document.getElementById("uploadSection");
     if (currentUser.CanUpload || currentUser.Role === "ADMIN") {
       uploadSection.classList.remove("hidden");
@@ -107,7 +105,6 @@ function initUIByUserRole() {
       uploadSection.classList.add("hidden");
     }
 
-    // إظهار وإخفاء المعارض بحسب الأذونات
     if (currentUser.ShowPublish || currentUser.Role === "ADMIN") {
       document.getElementById("sectionGalleryPublish")?.classList.remove("hidden");
     }
@@ -118,13 +115,11 @@ function initUIByUserRole() {
       document.getElementById("sectionGalleryOld")?.classList.remove("hidden");
     }
 
-    // إشعار وسجلات النشاطات (للمدير فقط)
     if (currentUser.Role === "ADMIN") {
       document.getElementById("activityLogSection")?.classList.remove("hidden");
       loadActivityLogs();
     }
 
-    // جلب كافة وسائط المعارض
     loadAllGalleries();
   }
 
@@ -140,10 +135,9 @@ function initUIByUserRole() {
 }
 
 // ==========================================
-// 4. إعداد المشتتات والضغطات (Event Listeners)
+// 4. إعداد المستمعات والضغطات (Event Listeners)
 // ==========================================
 function setupEventListeners() {
-  // قائمة "ملف" المنسدلة
   const fileMenuBtn = document.getElementById("fileMenuBtn");
   const fileDropdownContent = document.getElementById("fileDropdownContent");
   if (fileMenuBtn && fileDropdownContent) {
@@ -156,13 +150,11 @@ function setupEventListeners() {
     });
   }
 
-  // تسجيل الخروج
   document.getElementById("logoutBtn")?.addEventListener("click", function (e) {
     e.preventDefault();
     clearSessionAndShowLogin();
   });
 
-  // نموذج تسجيل الدخول
   document.getElementById("loginForm")?.addEventListener("submit", function (e) {
     e.preventDefault();
     const u = document.getElementById("loginUsername").value.trim();
@@ -190,20 +182,17 @@ function setupEventListeners() {
     });
   });
 
-  // معالجة رفع الملفات من الاستوديو
   setupUploadInput("inputDesignImages", "DESIGN_IMAGES");
   setupUploadInput("inputDesignVideos", "DESIGN_VIDEOS");
   setupUploadInput("inputPublishImages", "PUBLISH_IMAGES");
   setupUploadInput("inputPublishVideos", "PUBLISH_VIDEOS");
 
-  // نافذة معاينة الصور والفيديو
   document.getElementById("closePreviewBtn")?.addEventListener("click", function () {
     document.getElementById("previewModal")?.classList.add("hidden");
     const holder = document.getElementById("previewContentHolder");
     if (holder) holder.innerHTML = "";
   });
 
-  // نافذة نقل الوسائط العامة
   document.getElementById("cancelMoveBtn")?.addEventListener("click", function () {
     document.getElementById("moveMediaModal")?.classList.add("hidden");
     currentMediaToMove = null;
@@ -212,26 +201,29 @@ function setupEventListeners() {
   document.getElementById("confirmMoveBtn")?.addEventListener("click", function () {
     const targetFolder = document.getElementById("targetFolderSelect").value;
     if (currentMediaToMove && targetFolder) {
-      executeMediaMove(currentMediaToMove, targetFolder);
+      if (targetFolder === "SOCIAL") {
+        document.getElementById("moveMediaModal")?.classList.add("hidden");
+        document.getElementById("socialMetaModal")?.classList.remove("hidden");
+      } else {
+        executeMediaMove(currentMediaToMove, targetFolder);
+      }
     }
   });
 
-  // نافذة تفاصيل الهاشتاق لمجلد التواصل الاجتماعي
   document.getElementById("cancelSocialMetaBtn")?.addEventListener("click", function () {
     document.getElementById("socialMetaModal")?.classList.add("hidden");
     currentMediaToMove = null;
   });
 
   document.getElementById("confirmSocialMetaBtn")?.addEventListener("click", function () {
-    const publishInfo = document.getElementById("metaPublishInfo").value.trim();
-    const titleHashtag = document.getElementById("metaTitleHashtag").value.trim();
+    const publishInfo = document.getElementById("metaPublishInfo")?.value.trim() || "";
+    const titleHashtag = document.getElementById("metaTitleHashtag")?.value.trim() || "";
     
     if (currentMediaToMove) {
       executeMediaMove(currentMediaToMove, "SOCIAL", titleHashtag, publishInfo);
     }
   });
 
-  // نموذج إضافة مشترك جديد (في صفحة control.html)
   document.getElementById("addUserForm")?.addEventListener("submit", function (e) {
     e.preventDefault();
     addNewUserHandler();
@@ -271,9 +263,6 @@ function fetchFolderMedia(folderKey) {
   });
 }
 
-/**
- * رسم بطاقات الوسائط داخل الصفحات المحددة (5 عناصر + زر المزيد)
- */
 function renderFolderMediaGrid(folderKey, files) {
   const container = document.getElementById(`container${folderKey}`);
   if (!container) return;
@@ -285,7 +274,6 @@ function renderFolderMediaGrid(folderKey, files) {
     return;
   }
 
-  // عرض أول 5 عناصر ثم زر المزيد إذا تجاوزت 5
   const initialDisplayLimit = 5;
   const filesToRender = files.slice(0, initialDisplayLimit);
 
@@ -310,14 +298,10 @@ function renderFolderMediaGrid(folderKey, files) {
   }
 }
 
-/**
- * بناء بطاقة وسيط مربع متوافق مع كافة الشروط
- */
 function createMediaCardElement(file, folderKey) {
   const card = document.createElement("div");
   card.className = "media-card";
 
-  // 1. فحص الشارة المضيئة تلقائياً (عمر أقل من 24 ساعة)
   const isNew = checkIsNewFile(file.createdDate);
   if (isNew) {
     const badge = document.createElement("span");
@@ -326,16 +310,15 @@ function createMediaCardElement(file, folderKey) {
     card.appendChild(badge);
   }
 
-  // 2. صندوق المعاينة (ضغط مزدوج للمعاينة)
   const previewBox = document.createElement("div");
   previewBox.className = "media-preview-box";
   
-  if (file.mimeType.startsWith("image/")) {
+  if (file.mimeType && file.mimeType.startsWith("image/")) {
     const img = document.createElement("img");
     img.src = file.thumbnailUrl || file.downloadUrl;
     img.alt = file.name;
     previewBox.appendChild(img);
-  } else if (file.mimeType.startsWith("video/")) {
+  } else if (file.mimeType && file.mimeType.startsWith("video/")) {
     const video = document.createElement("video");
     video.src = file.downloadUrl;
     previewBox.appendChild(video);
@@ -347,7 +330,6 @@ function createMediaCardElement(file, folderKey) {
 
   card.appendChild(previewBox);
 
-  // 3. التفاصيل تحت الوسيط مباشرة
   const details = document.createElement("div");
   details.className = "media-details";
   details.innerHTML = `
@@ -357,7 +339,6 @@ function createMediaCardElement(file, folderKey) {
   `;
   card.appendChild(details);
 
-  // 4. مربع النص الخاص بالهاشتاق لمجلد التواصل الاجتماعي
   if (folderKey === "SOCIAL" && file.metaData) {
     const socialBox = document.createElement("div");
     socialBox.className = "social-meta-display";
@@ -367,30 +348,25 @@ function createMediaCardElement(file, folderKey) {
     card.appendChild(socialBox);
   }
 
-  // 5. الأزرار الأربعة المباشرة: [تنزيل] [نقل] [حذف] [مشاركة]
   const actionsGrid = document.createElement("div");
   actionsGrid.className = "media-actions-grid";
 
-  // زر تنزيل
   const dlBtn = document.createElement("button");
   dlBtn.className = "btn-card-action btn-secondary";
   dlBtn.textContent = "تنزيل";
   dlBtn.onclick = function () { handleDownload(file); };
 
-  // زر نقل
   const mvBtn = document.createElement("button");
   mvBtn.className = "btn-card-action btn-secondary";
   mvBtn.textContent = "نقل";
   mvBtn.onclick = function () { openMoveModal(file); };
 
-  // زر حذف
   const delBtn = document.createElement("button");
   delBtn.className = "btn-card-action btn-secondary";
   delBtn.style.color = "#ef4444";
   delBtn.textContent = "حذف";
   delBtn.onclick = function () { handleDelete(file, folderKey); };
 
-  // زر مشاركة عبر واتساب
   const shareBtn = document.createElement("button");
   shareBtn.className = "btn-card-action btn-secondary";
   shareBtn.textContent = "واتساب";
@@ -401,7 +377,6 @@ function createMediaCardElement(file, folderKey) {
   actionsGrid.appendChild(delBtn);
   actionsGrid.appendChild(shareBtn);
 
-  // 6. زر تبديل الحالة الفرعية المعزز باللون
   if (["PUBLISH_IMAGES", "PUBLISH_VIDEOS", "STATUSES", "SOCIAL"].includes(folderKey)) {
     const statusBtn = document.createElement("button");
     const isDone = file.statusFlag === "DONE";
@@ -422,9 +397,6 @@ function createMediaCardElement(file, folderKey) {
   return card;
 }
 
-/**
- * حساب عمر الملف لتفعيل شارة 🔥 جديد تلقائياً إذا كان أقل من 24 ساعة
- */
 function checkIsNewFile(createdDateStr) {
   if (!createdDateStr) return false;
   const createdTime = new Date(createdDateStr).getTime();
@@ -436,10 +408,6 @@ function checkIsNewFile(createdDateStr) {
 // ==========================================
 // 6. عمليات الرفع والنقل والحذف والتشارك
 // ==========================================
-
-/**
- * معالجة اختيار الملفات ورفعها بشريط تقدم تفاعلي
- */
 function setupUploadInput(inputId, folderKey) {
   const inputElem = document.getElementById(inputId);
   if (!inputElem) return;
@@ -504,9 +472,6 @@ function readFileAsBase64(file) {
   });
 }
 
-/**
- * فتح نافذة النقل
- */
 function openMoveModal(file) {
   if (!currentUser.CanMove && currentUser.Role !== "ADMIN") {
     alert("ليس لديك صلاحية لنقل الوسائط.");
@@ -538,9 +503,6 @@ function executeMediaMove(file, targetFolder, titleHashtag = "", publishInfo = "
   });
 }
 
-/**
- * حذف الوسيط
- */
 function handleDelete(file, folderKey) {
   if (!currentUser.CanDelete && currentUser.Role !== "ADMIN") {
     alert("ليس لديك صلاحية لحذف الوسائط.");
@@ -562,9 +524,6 @@ function handleDelete(file, folderKey) {
   });
 }
 
-/**
- * تنزيل الوسيط ومشاركة النصوص
- */
 function handleDownload(file) {
   if (file.metaData && file.metaData.titleHashtag) {
     navigator.clipboard.writeText(file.metaData.titleHashtag).then(() => {
@@ -574,9 +533,6 @@ function handleDownload(file) {
   window.open(file.downloadUrl, '_blank');
 }
 
-/**
- * مشاركة عبر الواتساب رابط مباشر
- */
 function handleWhatsAppShare(file) {
   let text = `وسائط الغامدي: ${file.name}\n${file.downloadUrl}`;
   if (file.metaData && file.metaData.titleHashtag) {
@@ -586,9 +542,6 @@ function handleWhatsAppShare(file) {
   window.open(url, '_blank');
 }
 
-/**
- * التبديل بين حالات النشر والتعديل
- */
 function toggleMediaStatus(file, folderKey) {
   let newStatus = "PENDING";
   if (file.statusFlag === "DONE") newStatus = "PENDING";
@@ -608,20 +561,17 @@ function toggleMediaStatus(file, folderKey) {
   });
 }
 
-/**
- * فتح نافذة التكبير والمعاينة
- */
 function openPreviewModal(file) {
   const modal = document.getElementById("previewModal");
   const holder = document.getElementById("previewContentHolder");
   if (!modal || !holder) return;
 
   holder.innerHTML = "";
-  if (file.mimeType.startsWith("image/")) {
+  if (file.mimeType && file.mimeType.startsWith("image/")) {
     const img = document.createElement("img");
     img.src = file.downloadUrl;
     holder.appendChild(img);
-  } else if (file.mimeType.startsWith("video/")) {
+  } else if (file.mimeType && file.mimeType.startsWith("video/")) {
     const video = document.createElement("video");
     video.src = file.downloadUrl;
     video.controls = true;
@@ -682,7 +632,7 @@ function renderControlUsersAccordion(users) {
 
   container.innerHTML = "";
   users.forEach(user => {
-    if (user.Role === "ADMIN") return; // استثناء المدير من قائمة الحظر والتحكم الفرعية
+    if (user.Role === "ADMIN") return;
 
     const item = document.createElement("div");
     item.className = "user-accordion-item";
