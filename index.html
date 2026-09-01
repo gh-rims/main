@@ -3,25 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>وسائط الغامدي للنشر والتعديل</title>
-  <!-- خط Cairo من Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <!-- ملف التنسيقات الخارجية -->
+  <title>نظام وسائط الغامدي</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
   <!-- ========================================== -->
-  <!-- 1. الهيدر الموحد (Header)                   -->
+  <!-- 1. الهيدر الموحد                          -->
   <!-- ========================================== -->
   <header class="main-header">
     <div class="header-right">
       <img src="Ligo.jpg" alt="شعار الغامدي" class="brand-logo">
       <span class="brand-name">الغامدي لإصلاح الجنوط</span>
     </div>
-
+    
     <div class="header-center">
       <h1 class="page-title">وسائط الغامدي للنشر والتعديل</h1>
     </div>
@@ -29,157 +25,129 @@
     <div class="header-left">
       <div class="user-profile-menu">
         <span id="userDisplayName" class="user-display-name">جاري التحميل...</span>
+        
         <div class="dropdown-file-menu">
-          <button id="fileMenuBtn" class="file-menu-btn">📂 ملف ▼</button>
+          <button id="fileMenuBtn" class="file-menu-btn">📁 ملف ▼</button>
           <div id="fileDropdownContent" class="dropdown-content hidden">
-            <!-- الروابط الخاصة بالمدير تُعرض شرطياً بواسطة app.js -->
-            <a href="control.html" id="controlPageLink" class="admin-only-link hidden">1. لوحة التحكم</a>
-            <a href="#" id="menuDownloadSelected">2. تنزيل المحتوى المحدد</a>
-            <a href="#" id="menuMoveSelected">3. نقل المحتوى المحدد</a>
-            <a href="#" id="menuDeleteSelected">4. حذف المحتوى المحدد</a>
+            <a href="control.html" id="controlPageLink" class="admin-only-link hidden">⚙️ لوحة التحكم (المدير)</a>
             <hr class="menu-divider">
-            <a href="#" id="logoutBtn" class="logout-link">تسجيل الخروج</a>
+            <a href="#" id="logoutBtn" class="logout-link">🚪 تسجيل الخروج</a>
           </div>
         </div>
       </div>
     </div>
   </header>
 
+  <!-- ========================================== -->
+  <!-- 2. محتوى الصفحة الرئيسي                     -->
+  <!-- ========================================== -->
   <main class="main-container">
 
-    <!-- ========================================== -->
-    <!-- 2. قسم الرفع من الاستوديو                   -->
-    <!-- ========================================== -->
-    <section id="uploadSection" class="upload-section card-box hidden">
-      <h2 class="section-divider-title"><span>تحميل من الاستوديو</span></h2>
-      
+    <!-- قسم رفع الوسائط (يظهر حسب الصلاحية) -->
+    <section id="uploadSection" class="card-box hidden">
+      <h2 class="folder-title">رفع وسائط جديدة</h2>
       <div class="upload-buttons-grid">
         <div class="upload-btn-card">
-          <label for="inputDesignImages" class="btn btn-orange">
-            📸 رفع صور للتصميم والتعديل
-          </label>
+          <label for="inputDesignImages" class="btn btn-orange">📷 رفع صور للتصميم</label>
           <input type="file" id="inputDesignImages" accept="image/*" multiple class="file-input-hidden">
-          <span class="upload-sub-text">تحميل صور</span>
+          <span class="upload-sub-text">تُرفع مباشرة لمجلد التصميم</span>
         </div>
-
         <div class="upload-btn-card">
-          <label for="inputDesignVideos" class="btn btn-orange">
-            🎥 رفع فيديو للتصميم والتعديل
-          </label>
+          <label for="inputDesignVideos" class="btn btn-orange">🎥 رفع فيديو للتصميم</label>
           <input type="file" id="inputDesignVideos" accept="video/*" multiple class="file-input-hidden">
-          <span class="upload-sub-text">تحميل فيديو</span>
+          <span class="upload-sub-text">تُرفع مباشرة لمجلد التصميم</span>
         </div>
-
         <div class="upload-btn-card">
-          <label for="inputPublishImages" class="btn btn-orange">
-            🖼️ رفع صور جاهزة للنشر
-          </label>
+          <label for="inputPublishImages" class="btn btn-orange">🖼️ رفع صور للنشر</label>
           <input type="file" id="inputPublishImages" accept="image/*" multiple class="file-input-hidden">
-          <span class="upload-sub-text">تحميل صور</span>
+          <span class="upload-sub-text">تُرفع لمجلد جاهز للنشر</span>
         </div>
-
         <div class="upload-btn-card">
-          <label for="inputPublishVideos" class="btn btn-orange">
-            🎬 رفع فيديو جاهز للنشر
-          </label>
+          <label for="inputPublishVideos" class="btn btn-orange">🎬 رفع فيديو للنشر</label>
           <input type="file" id="inputPublishVideos" accept="video/*" multiple class="file-input-hidden">
-          <span class="upload-sub-text">تحميل فيديو</span>
+          <span class="upload-sub-text">تُرفع لمجلد جاهز للنشر</span>
         </div>
       </div>
 
-      <!-- شريط تقدم رفع الملفات -->
+      <!-- شريط تقدم الرفع -->
       <div id="uploadProgressContainer" class="progress-container hidden">
         <div class="progress-bar-wrapper">
           <div id="uploadProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
         </div>
         <div class="progress-info-text">
-          <span id="uploadStatusText">جاري معالجة الملفات...</span>
+          <span id="uploadStatusText">جاري الرفع...</span>
           <span id="uploadPercentageText">0%</span>
         </div>
       </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- 3. قسم المعارض (مقسم إلى 3 فروع)            -->
-    <!-- ========================================== -->
-
-    <!-- أ- معرض وسائط للنشر -->
-    <section id="sectionGalleryPublish" class="gallery-section hidden">
-      <h2 class="section-divider-title"><span>معرض وسائط للنشر</span></h2>
+    <!-- 1. قسم معرض وسائط للنشر -->
+    <section id="sectionGalleryPublish" class="card-box hidden">
+      <div class="section-divider-title"><span>معرض وسائط للنشر</span></div>
       
-      <!-- مجلد: صور جاهزة للنشر -->
       <div class="folder-block">
-        <h3 class="folder-title">صور جاهزة للنشر</h3>
+        <h3 class="folder-title">معرض وسائط للنشر - صور</h3>
         <div id="containerPUBLISH_IMAGES" class="media-grid-row"></div>
       </div>
 
-      <!-- مجلد: فيديو جاهز للنشر -->
       <div class="folder-block">
-        <h3 class="folder-title">فيديو جاهز للنشر</h3>
+        <h3 class="folder-title">معرض وسائط للنشر - فيديو</h3>
         <div id="containerPUBLISH_VIDEOS" class="media-grid-row"></div>
       </div>
 
-      <!-- مجلد: الحالات [نشر] -->
       <div class="folder-block">
-        <h3 class="folder-title">الحالات [نشر]</h3>
+        <h3 class="folder-title">حالات واتساب ومقاطع قصيرة</h3>
         <div id="containerSTATUSES" class="media-grid-row"></div>
       </div>
 
-      <!-- مجلد: تواصل اجتماعي [نشر] -->
       <div class="folder-block">
-        <h3 class="folder-title">تواصل اجتماعي [نشر]</h3>
+        <h3 class="folder-title">منشورات للتواصل الاجتماعي</h3>
         <div id="containerSOCIAL" class="media-grid-row"></div>
       </div>
     </section>
 
-    <!-- ب- معرض وسائط للتصميم -->
-    <section id="sectionGalleryDesign" class="gallery-section hidden">
-      <h2 class="section-divider-title"><span>معرض وسائط للتصميم</span></h2>
+    <!-- 2. قسم معرض وسائط للتصميم -->
+    <section id="sectionGalleryDesign" class="card-box hidden">
+      <div class="section-divider-title"><span>معرض وسائط للتصميم</span></div>
       
-      <!-- مجلد: صور للتصميم والتعديل -->
       <div class="folder-block">
-        <h3 class="folder-title">صور للتصميم والتعديل</h3>
+        <h3 class="folder-title">معرض وسائط للتصميم - صور</h3>
         <div id="containerDESIGN_IMAGES" class="media-grid-row"></div>
       </div>
 
-      <!-- مجلد: فيديو للتصميم والتعديل -->
       <div class="folder-block">
-        <h3 class="folder-title">فيديو للتصميم والتعديل</h3>
+        <h3 class="folder-title">معرض وسائط للتصميم - فيديو</h3>
         <div id="containerDESIGN_VIDEOS" class="media-grid-row"></div>
       </div>
     </section>
 
-    <!-- ج- معرض الوسائط القديمة -->
-    <section id="sectionGalleryOld" class="gallery-section hidden">
-      <h2 class="section-divider-title"><span>معرض الوسائط القديمة</span></h2>
+    <!-- 3. قسم معرض وسائط قديمة -->
+    <section id="sectionGalleryOld" class="card-box hidden">
+      <div class="section-divider-title"><span>معرض وسائط قديمة</span></div>
       
-      <!-- مجلد: صورة قديمة -->
       <div class="folder-block">
-        <h3 class="folder-title">صورة قديمة</h3>
+        <h3 class="folder-title">معرض وسائط قديمة - صور</h3>
         <div id="containerOLD_IMAGES" class="media-grid-row"></div>
       </div>
 
-      <!-- مجلد: فيديو قديم -->
       <div class="folder-block">
-        <h3 class="folder-title">فيديو قديم</h3>
+        <h3 class="folder-title">معرض وسائط قديمة - فيديو</h3>
         <div id="containerOLD_VIDEOS" class="media-grid-row"></div>
       </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- 4. قسم الإشعارات والسجلات (للمدير فقط)     -->
-    <!-- ========================================== -->
-    <section id="activityLogSection" class="activity-log-section card-box hidden">
-      <h2 class="section-divider-title"><span>سجل الإشعارات والعمليات الأخيرة</span></h2>
+    <!-- 4. سجل النشاطات الإشعارات (للمدير فقط) -->
+    <section id="activityLogSection" class="card-box hidden">
+      <h2 class="folder-title">سجل عمليات وسائط النظام الحديثة</h2>
       <div class="table-responsive">
         <table class="log-table">
           <thead>
             <tr>
-              <th>الوقت والتاريخ</th>
+              <th>التاريخ والوقت</th>
               <th>المستخدم</th>
               <th>نوع العملية</th>
               <th>التفاصيل</th>
-              <th>اسم الوسيط</th>
+              <th>اسم الملف</th>
             </tr>
           </thead>
           <tbody id="activityLogTableBody">
@@ -194,89 +162,70 @@
   </main>
 
   <!-- ========================================== -->
-  <!-- 5. التذييل (Footer)                        -->
-  <!-- ========================================== -->
-  <footer class="main-footer">
-    <p>الغامدي لإصلاح الجنوط / 2026</p>
-  </footer>
-
-  <!-- ========================================== -->
-  <!-- 6. النوافذ المنبثقة (Modals)               -->
+  <!-- 3. النوافذ المنبثقة (Modals)                 -->
   <!-- ========================================== -->
 
-  <!-- نافذة تسجيل الدخول المنبثقة -->
+  <!-- نافذة تسجيل الدخول -->
   <div id="loginModal" class="modal-backdrop hidden">
     <div class="modal-card">
-      <img src="Ligo.jpg" alt="الشعار" class="modal-logo">
-      <h2 class="modal-title">تسجيل الدخول للنظام</h2>
+      <img src="Ligo.jpg" alt="شعار الغامدي" class="modal-logo">
+      <h2 class="modal-title">تسجيل الدخول - وسائط الغامدي</h2>
+      
       <form id="loginForm">
         <div class="form-group">
-          <label for="loginUsername">اسم المستخدم</label>
+          <label for="loginUsername">اسم المستخدم:</label>
           <input type="text" id="loginUsername" class="form-control" placeholder="أدخل اسم المستخدم" required>
         </div>
+        
         <div class="form-group">
-          <label for="loginPassword">كلمة المرور</label>
+          <label for="loginPassword">كلمة المرور:</label>
           <input type="password" id="loginPassword" class="form-control" placeholder="أدخل كلمة المرور" required>
         </div>
+
         <div id="loginErrorMessage" class="error-msg hidden"></div>
+
         <button type="submit" class="btn btn-orange btn-block">دخول</button>
       </form>
     </div>
   </div>
 
-  <!-- نافذة النقل إلى مجلد تواصل اجتماعي (بيانات الوصف والهاشتاق) -->
-  <div id="socialMetaModal" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <h3 class="modal-title">معلومات النشر والوصف والهاشتاق</h3>
-      <form id="socialMetaForm">
-        <div class="form-group">
-          <label for="metaPublishInfo">معلومات النشر (ملاحظات سريعة):</label>
-          <input type="text" id="metaPublishInfo" class="form-control" placeholder="مثال: جاهز للانستقرام والتيك توك">
-        </div>
-        <div class="form-group">
-          <label for="metaTitleHashtag">العنوان والهاشتاق (فقيرة الوصف للنشر):</label>
-          <textarea id="metaTitleHashtag" class="form-control" rows="5" placeholder="أدخل النص والهاشتاقات هنا..."></textarea>
-        </div>
-        <div class="modal-actions-grid">
-          <button type="button" id="confirmSocialMetaBtn" class="btn btn-orange">موافق</button>
-          <button type="button" id="cancelSocialMetaBtn" class="btn btn-secondary">إلغاء</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- نافذة نقل الملفات العامة -->
-  <div id="moveMediaModal" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <h3 class="modal-title">اختر المجلد الهدف للنقل</h3>
-      <div class="form-group">
-        <select id="targetFolderSelect" class="form-control">
-          <option value="DESIGN_IMAGES">صور للتصميم والتعديل</option>
-          <option value="DESIGN_VIDEOS">فيديو للتصميم والتعديل</option>
-          <option value="PUBLISH_IMAGES">صور جاهزة للنشر</option>
-          <option value="PUBLISH_VIDEOS">فيديو جاهز للنشر</option>
-          <option value="STATUSES">الحالات [نشر]</option>
-          <option value="SOCIAL">تواصل اجتماعي [نشر]</option>
-          <option value="OLD_IMAGES">صورة قديمة [أرشيف]</option>
-          <option value="OLD_VIDEOS">فيديو قديم [أرشيف]</option>
-        </select>
-      </div>
-      <div class="modal-actions-grid">
-        <button type="button" id="confirmMoveBtn" class="btn btn-orange">نقل</button>
-        <button type="button" id="cancelMoveBtn" class="btn btn-secondary">إلغاء</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- نافذة العرض والمعاينة للملفات (عند الضغط المزدوج) -->
+  <!-- نافذة المعاينة -->
   <div id="previewModal" class="modal-backdrop hidden">
     <div class="modal-preview-container">
-      <button id="closePreviewBtn" class="close-preview-btn">✕</button>
+      <button id="closePreviewBtn" class="close-preview-btn">&times;</button>
       <div id="previewContentHolder" class="preview-content-holder"></div>
     </div>
   </div>
 
-  <!-- ملف المنطق والرابط الأمامي -->
+  <!-- نافذة النقل العام -->
+  <div id="moveMediaModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <h3 class="modal-title">نقل الوسيط إلى مجلد آخر</h3>
+      <div class="form-group">
+        <label for="targetFolderSelect">اختر المجلد الهدف:</label>
+        <select id="targetFolderSelect" class="form-control">
+          <option value="PUBLISH_IMAGES">معرض وسائط للنشر - صور</option>
+          <option value="PUBLISH_VIDEOS">معرض وسائط للنشر - فيديو</option>
+          <option value="STATUSES">حالات واتساب ومقاطع قصيرة</option>
+          <option value="SOCIAL">منشورات للتواصل الاجتماعي</option>
+          <option value="DESIGN_IMAGES">معرض وسائط للتصميم - صور</option>
+          <option value="DESIGN_VIDEOS">معرض وسائط للتصميم - فيديو</option>
+          <option value="OLD_IMAGES">معرض وسائط قديمة - صور</option>
+          <option value="OLD_VIDEOS">معرض وسائط قديمة - فيديو</option>
+        </select>
+      </div>
+      <div class="modal-actions-grid">
+        <button id="confirmMoveBtn" class="btn btn-orange">تأكيد النقل</button>
+        <button id="cancelMoveBtn" class="btn btn-secondary">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- تذييل الصفحة -->
+  <footer class="main-footer">
+    <p>جميع الحقوق محفوظة &copy; 2026 مؤسسة الغامدي لإصلاح الجنوط - جدة</p>
+  </footer>
+
   <script src="app.js"></script>
 </body>
 </html>
