@@ -1,26 +1,29 @@
 /* ================================================================================
  * مشروع نظام وسائط الغامدي - ملف التنسيقات الموحد (style.css)
+ * النسخة المتوافقة بالكامل مع الهيكل الشامل (خلفية بيضاء + هوية بصرية برتقالية)
  * ================================================================================ */
 
-/* 1. الإعدادات العامة وخلفية الصفحة البيضاء */
+/* 1. المتغيرات العامة للهوية البصرية */
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --border-color: #e2e8f0;
-  --accent-orange: #f97316;
-  --accent-orange-hover: #ea580c;
-  --accent-dark: #0f172a;
-  --danger-color: #ef4444;
-  --success-color: #10b981;
+  --bg-primary: #ffffff;             /* خلفية بيضاء صافية */
+  --bg-secondary: #f8fafc;           /* خلفية فرعية خفيفة جداً */
+  --accent-orange: #F47B00;          /* البرتقالي المعتمد للهوية */
+  --accent-orange-hover: #d96d00;    /* برتقالي داكن للتمرير */
+  --accent-navy: #0f172a;            /* الكحلي/الأسود الداكن للنصوص والأزرار */
+  --text-main: #000000;              /* لون النص الرئيسي (أسود) */
+  --text-muted: #64748b;             /* لون النص الفرعي */
+  --border-color: #cbd5e1;           /* لون الحدود */
+  --danger-color: #ef4444;           /* لون الحذف والتنبيه */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* 2. الإعدادات الأساسية لـ Body والحاويات */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: 'Cairo', system-ui, -apple-system, sans-serif;
 }
 
 html, body {
@@ -30,23 +33,10 @@ html, body {
   min-height: 100vh;
 }
 
-/* 2. الهيكل العام والحاويات */
-.app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
 .main-content {
-  max-width: 1200px;
+  max-width: 1250px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
   background-color: var(--bg-primary);
 }
 
@@ -54,112 +44,211 @@ html, body {
   display: none !important;
 }
 
-/* 3. القوائم والمنسدلات */
+/* 3. الهيدر العلوي وشريط التنقل */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.5rem;
+  background-color: var(--bg-primary) !important;
+  border-bottom: 2px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-orange);
+}
+
+.brand-titles .main-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.header-center-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-orange);
+  text-align: center;
+}
+
+.header-user-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-name-display {
+  font-weight: 700;
+  color: var(--accent-navy);
+  font-size: 0.95rem;
+}
+
+/* القائمة المنسدلة (ملف) */
 .file-menu-container {
   position: relative;
-  display: inline-block;
 }
 
 .dropdown-content {
   position: absolute;
-  top: 100%;
-  right: 0;
+  top: 110%;
+  left: 0;
   background-color: var(--bg-primary);
-  min-width: 180px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 190px;
+  box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 0.5rem 0;
-  z-index: 200;
+  z-index: 600;
 }
 
 .dropdown-item {
   display: block;
-  padding: 0.6rem 1.2rem;
+  padding: 0.7rem 1rem;
   color: var(--text-main);
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.2s;
 }
 
 .dropdown-item:hover {
   background-color: var(--bg-secondary);
+  color: var(--accent-orange);
 }
 
-.menu-divider {
-  border: 0;
-  border-top: 1px solid var(--border-color);
-  margin: 0.5rem 0;
-}
-
-/* 4. الأزرار العامة */
+/* 4. تصميم الأزرار المعتمدة للهوية البصرية */
 .btn {
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
+  padding: 0.65rem 1.25rem;
+  border-radius: 8px;
   border: 1px solid transparent;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease-in-out;
   font-size: 0.9rem;
 }
 
-.btn-primary {
-  background-color: var(--accent-dark);
-  color: #ffffff;
-}
-
-.btn-primary:hover {
-  background-color: #1e293b;
-}
-
-.btn-secondary {
-  background-color: var(--bg-primary);
-  border-color: var(--border-color);
-  color: var(--text-main);
-}
-
-.btn-secondary:hover {
-  background-color: var(--bg-secondary);
-}
-
+/* الأزرار الرئيسية (برتقالي مميز) */
 .btn-orange {
-  background-color: var(--accent-orange);
-  color: #ffffff;
+  background-color: var(--accent-orange) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(244, 123, 0, 0.25);
 }
 
 .btn-orange:hover {
-  background-color: var(--accent-orange-hover);
+  background-color: var(--accent-orange-hover) !important;
+  transform: translateY(-1px);
 }
 
-/* 5. قسم الرفع وشريط التقدم */
-.upload-section {
+/* الأزرار الثانوية (كحلي/أسود داكن) */
+.btn-dark {
+  background-color: var(--accent-navy) !important;
+  color: #ffffff !important;
+}
+
+.btn-dark:hover {
+  background-color: #1e293b !important;
+  transform: translateY(-1px);
+}
+
+/* الأزرار العادية والمحددة */
+.btn-outline {
+  background-color: var(--bg-primary) !important;
+  border: 1.5px solid var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+.btn-outline:hover {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--accent-orange) !important;
+}
+
+/* 5. قسم الرفع (تحميل من الاستوديو) */
+.upload-card-wrapper {
   background-color: var(--bg-primary);
-  border: 2px dashed var(--border-color);
-  border-radius: 12px;
+  border: 2px dashed var(--accent-orange);
+  border-radius: 14px;
   padding: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   text-align: center;
 }
 
-.upload-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
+.section-divider-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--accent-navy);
+  margin-bottom: 1.2rem;
 }
 
+.upload-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .upload-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.upload-btn-label {
+  display: flex;
+  flex-direction: column;
+  padding: 0.9rem;
+  background-color: var(--accent-navy);
+  color: #ffffff;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.upload-btn-label:hover {
+  background-color: var(--accent-orange);
+  transform: translateY(-2px);
+}
+
+.upload-btn-label small {
+  font-size: 0.75rem;
+  margin-top: 4px;
+  color: #cbd5e1;
+}
+
+/* شريط تقدم الرفع */
 .progress-container {
-  margin-top: 1.5rem;
+  margin-top: 1.2rem;
   background-color: var(--bg-secondary);
-  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
   padding: 1rem;
 }
 
 .progress-bar-wrap {
-  background-color: var(--border-color);
-  height: 10px;
-  border-radius: 5px;
+  background-color: #e2e8f0;
+  height: 12px;
+  border-radius: 6px;
   overflow: hidden;
-  margin: 0.5rem 0;
+  margin: 0.6rem 0;
 }
 
 .progress-bar {
@@ -169,32 +258,40 @@ html, body {
   transition: width 0.3s ease;
 }
 
-/* 6. شبكة المعارض وبطاقات الوسائط */
-.section-title {
+/* 6. المعارض وبطاقات الوسائط المربعة */
+.gallery-section-title {
+  text-align: center;
   font-size: 1.3rem;
-  margin: 1.5rem 0 1rem 0;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--border-color);
+  font-weight: 800;
+  color: var(--accent-navy);
+  margin: 2rem 0 1rem 0;
+  position: relative;
 }
 
-.media-grid-container {
+.media-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 1.2rem;
   margin-bottom: 2rem;
 }
 
 .media-card {
   position: relative;
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
+  background-color: var(--bg-primary) !important;
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
   padding: 0.75rem;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s;
 }
 
+.media-card:hover {
+  border-color: var(--accent-orange);
+}
+
+/* شارات جديد 🔥 ذات التدرج التوهجي (Pulse Glow) */
 .badge-new {
   position: absolute;
   top: 12px;
@@ -203,16 +300,24 @@ html, body {
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: bold;
-  padding: 2px 8px;
-  border-radius: 12px;
+  padding: 3px 10px;
+  border-radius: 20px;
   z-index: 10;
+  box-shadow: 0 0 0 rgba(244, 123, 0, 0.7);
+  animation: pulse-glow 1.8s infinite;
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 0 0 rgba(244, 123, 0, 0.7); }
+  70% { box-shadow: 0 0 0 8px rgba(244, 123, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(244, 123, 0, 0); }
 }
 
 .media-preview-box {
   width: 100%;
   height: 160px;
   background-color: #000000;
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -228,8 +333,9 @@ html, body {
 }
 
 .media-details {
-  margin: 0.75rem 0;
-  font-size: 0.85rem;
+  margin: 0.6rem 0;
+  font-size: 0.8rem;
+  color: var(--text-main);
 }
 
 .media-name {
@@ -237,32 +343,25 @@ html, body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 0.25rem;
-}
-
-.media-meta-text {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-}
-
-.social-meta-display {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.2rem;
 }
 
 .meta-textarea-readonly {
   width: 100%;
-  height: 50px;
-  font-size: 0.8rem;
+  height: 48px;
+  font-size: 0.75rem;
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: 6px;
   resize: none;
   padding: 4px;
   background-color: var(--bg-secondary);
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
 }
 
 .media-actions-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.4rem;
   margin-top: auto;
 }
@@ -270,23 +369,12 @@ html, body {
 .btn-card-action {
   font-size: 0.75rem;
   padding: 0.4rem 0.2rem;
+  border-radius: 6px;
 }
 
 .btn-status-toggle {
   grid-column: span 2;
   font-weight: bold;
-}
-
-.btn-status-white {
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  color: var(--text-main);
-}
-
-.btn-status-orange {
-  background-color: var(--accent-orange);
-  border: 1px solid var(--accent-orange);
-  color: #ffffff;
 }
 
 /* 7. النوافذ المنبثقة (Modals) */
@@ -296,7 +384,7 @@ html, body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -305,102 +393,21 @@ html, body {
 
 .modal-content {
   background-color: var(--bg-primary) !important;
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 1.5rem;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-
-.modal-preview-large {
-  max-width: 800px;
-}
-
-.modal-preview-large img,
-.modal-preview-large video {
-  max-width: 100%;
-  max-height: 70vh;
-  display: block;
-  margin: 0 auto;
-}
-
-/* 8. لوحة التحكم والأكورديون (control.html) */
-.user-accordion-item {
+  width: 92%;
+  max-width: 480px;
+  box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  margin-bottom: 0.75rem;
-  background-color: var(--bg-primary);
-  overflow: hidden;
 }
 
-.user-accordion-header {
-  padding: 1rem;
-  background-color: var(--bg-secondary);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
+/* 8. التذييل (Footer) */
+.app-footer {
+  text-align: center;
+  padding: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
   font-weight: bold;
-}
-
-.user-accordion-body {
-  padding: 1rem;
-  background-color: var(--bg-primary);
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.form-control {
-  width: 100%;
-  padding: 0.6rem;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  background-color: var(--bg-primary);
-}
-
-.checkbox-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 0.5rem;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-/* 9. جدول السجلات (Activity Log) */
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.activity-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  background-color: var(--bg-primary);
-}
-
-.activity-table th,
-.activity-table td {
-  padding: 0.75rem;
-  border: 1px solid var(--border-color);
-  text-align: right;
-  font-size: 0.85rem;
-}
-
-.activity-table th {
-  background-color: var(--bg-secondary);
+  color: var(--text-main);
+  margin-top: 3rem;
 }
