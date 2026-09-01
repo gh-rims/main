@@ -1,375 +1,223 @@
-/* ==========================================
-   1. المتغيرات العامة والتنسيقات الأساسية
-   ========================================== */
+/* ================================================================================
+ * مشروع نظام وسائط الغامدي - ملف التنسيقات الموحد (style.css)
+ * ================================================================================ */
+
+/* 1. الإعدادات العامة وخلفية الصفحة البيضاء */
 :root {
-  --bg-dark-navy: #0f172a;       /* الكحلي الداكن للخلفية والهيدر */
-  --bg-card: #1e293b;            /* لون الكروت والبطاقات */
-  --color-orange: #f47b00;        /* البرتقالي الرئيسي للمؤسسة */
-  --color-orange-hover: #d66c00;  /* برتقالي عند التمرير */
-  --text-white: #ffffff;          /* اللون الأبيض للنصوص */
-  --text-dark: #0f172a;           /* اللون الداكن للنصوص داخل الكروت الفاتحة */
-  --text-muted: #94a3b8;          /* رمادي فاتح للتفاصيل الثانوية */
-  --border-color: #334155;        /* لون الحدود */
-  --font-family: 'Cairo', sans-serif;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --accent-orange: #f97316;
+  --accent-orange-hover: #ea580c;
+  --accent-dark: #0f172a;
+  --danger-color: #ef4444;
+  --success-color: #10b981;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
-body {
-  font-family: var(--font-family);
-  background-color: var(--bg-dark-navy);
-  color: var(--text-white);
+html, body {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-main);
   direction: rtl;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
-.main-container {
-  flex: 1;
-  width: 100%;
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 20px 15px;
-}
-
-/* ==========================================
-   2. الهيدر الموحد (Header)
-   ========================================== */
-.main-header {
-  background-color: #0b1120;
-  border-bottom: 2px solid var(--color-orange);
-  padding: 12px 20px;
+/* 2. الهيكل العام والحاويات */
+.app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  padding: 1rem 2rem;
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background-color: var(--bg-primary);
 }
 
-.brand-logo {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  border: 2px solid var(--color-orange);
-  object-fit: cover;
+.hidden {
+  display: none !important;
 }
 
-.brand-name {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--text-white);
-}
-
-.header-center .page-title {
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: var(--color-orange);
-  text-align: center;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-/* القائمة المنسدلة للـ Profile */
-.user-profile-menu {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* 3. القوائم والمنسدلات */
+.file-menu-container {
   position: relative;
-}
-
-.user-display-name {
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.dropdown-file-menu {
-  position: relative;
-}
-
-.file-menu-btn {
-  background-color: var(--color-orange);
-  color: var(--text-white);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-family: var(--font-family);
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.file-menu-btn:hover {
-  background-color: var(--color-orange-hover);
+  display: inline-block;
 }
 
 .dropdown-content {
   position: absolute;
-  left: 0;
-  top: 110%;
-  background-color: var(--bg-card);
-  min-width: 200px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  top: 100%;
+  right: 0;
+  background-color: var(--bg-primary);
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  z-index: 1000;
-  overflow: hidden;
+  padding: 0.5rem 0;
+  z-index: 200;
 }
 
-.dropdown-content a {
-  color: var(--text-white);
-  padding: 12px 16px;
-  text-decoration: none;
+.dropdown-item {
   display: block;
+  padding: 0.6rem 1.2rem;
+  color: var(--text-main);
+  text-decoration: none;
   font-size: 0.95rem;
-  transition: background 0.2s;
 }
 
-.dropdown-content a:hover {
-  background-color: var(--color-orange);
-}
-
-.dropdown-content .admin-only-link {
-  background-color: rgba(244, 123, 0, 0.15);
-  font-weight: 700;
+.dropdown-item:hover {
+  background-color: var(--bg-secondary);
 }
 
 .menu-divider {
   border: 0;
   border-top: 1px solid var(--border-color);
-  margin: 0;
+  margin: 0.5rem 0;
 }
 
-.logout-link {
-  color: #ef4444 !important;
-}
-
-/* ==========================================
-   3. الأزرار والعناوين الرئيسية
-   ========================================== */
-.section-divider-title {
-  text-align: center;
-  position: relative;
-  margin: 25px 0 20px 0;
-}
-
-.section-divider-title span {
-  background-color: var(--bg-dark-navy);
-  padding: 0 20px;
-  color: var(--color-orange);
-  font-size: 1.2rem;
-  font-weight: 800;
-  position: relative;
-  z-index: 1;
-}
-
-.section-divider-title::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--border-color);
-  z-index: 0;
-}
-
-.card-box {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 25px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
+/* 4. الأزرار العامة */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 18px;
-  font-family: var(--font-family);
-  font-weight: 700;
-  font-size: 0.95rem;
-  border-radius: 8px;
-  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-weight: 600;
   cursor: pointer;
-  text-decoration: none;
-  transition: all 0.2s;
+  transition: background-color 0.2s, border-color 0.2s;
+  font-size: 0.9rem;
 }
 
-.btn-orange {
-  background-color: var(--color-orange);
-  color: var(--text-white);
+.btn-primary {
+  background-color: var(--accent-dark);
+  color: #ffffff;
 }
 
-.btn-orange:hover {
-  background-color: var(--color-orange-hover);
+.btn-primary:hover {
+  background-color: #1e293b;
 }
 
 .btn-secondary {
-  background-color: #475569;
-  color: var(--text-white);
+  background-color: var(--bg-primary);
+  border-color: var(--border-color);
+  color: var(--text-main);
 }
 
 .btn-secondary:hover {
-  background-color: #334155;
+  background-color: var(--bg-secondary);
 }
 
-.btn-block {
-  width: 100%;
+.btn-orange {
+  background-color: var(--accent-orange);
+  color: #ffffff;
 }
 
-.nav-back-btn {
-  font-size: 0.85rem;
-  padding: 6px 14px;
+.btn-orange:hover {
+  background-color: var(--accent-orange-hover);
 }
 
-/* ==========================================
-   4. قسم الرفع وتحميل الوسائط
-   ========================================== */
-.upload-buttons-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.upload-btn-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.upload-btn-card label {
-  width: 100%;
+/* 5. قسم الرفع وشريط التقدم */
+.upload-section {
+  background-color: var(--bg-primary);
+  border: 2px dashed var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
   text-align: center;
 }
 
-.file-input-hidden {
-  display: none;
-}
-
-.upload-sub-text {
-  font-size: 0.8rem;
-  color: var(--text-muted);
+.upload-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .progress-container {
-  margin-top: 20px;
-  background-color: rgba(0, 0, 0, 0.3);
-  padding: 15px;
+  margin-top: 1.5rem;
+  background-color: var(--bg-secondary);
   border-radius: 8px;
-  border: 1px solid var(--border-color);
+  padding: 1rem;
 }
 
-.progress-bar-wrapper {
-  height: 12px;
-  background-color: #334155;
-  border-radius: 6px;
+.progress-bar-wrap {
+  background-color: var(--border-color);
+  height: 10px;
+  border-radius: 5px;
   overflow: hidden;
-  margin-bottom: 8px;
+  margin: 0.5rem 0;
 }
 
-.progress-bar-fill {
+.progress-bar {
+  background-color: var(--accent-orange);
   height: 100%;
-  background-color: var(--color-orange);
+  width: 0%;
   transition: width 0.3s ease;
 }
 
-.progress-info-text {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.85rem;
-  color: var(--text-white);
+/* 6. شبكة المعارض وبطاقات الوسائط */
+.section-title {
+  font-size: 1.3rem;
+  margin: 1.5rem 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
 }
 
-/* ==========================================
-   5. قسم شبكة المعارض المربعة وعرض الوسائط
-   ========================================== */
-.folder-block {
-  margin-bottom: 30px;
-}
-
-.folder-title {
-  font-size: 1.05rem;
-  color: var(--text-white);
-  border-right: 4px solid var(--color-orange);
-  padding-right: 10px;
-  margin-bottom: 15px;
-}
-
-.media-grid-row {
-  display: flex;
-  gap: 15px;
-  overflow-x: auto;
-  padding-bottom: 10px;
+.media-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
 }
 
 .media-card {
   position: relative;
-  min-width: 180px;
-  max-width: 180px;
-  background-color: #0f172a;
+  background-color: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: 10px;
-  overflow: hidden;
+  padding: 0.75rem;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
-/* الشارة المضيئة للمقاطع الجديدة (Badge-New) */
 .badge-new {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  background-color: var(--color-orange);
-  color: #fff;
+  top: 12px;
+  right: 12px;
+  background-color: var(--accent-orange);
+  color: #ffffff;
   font-size: 0.75rem;
-  font-weight: 800;
-  padding: 3px 8px;
+  font-weight: bold;
+  padding: 2px 8px;
   border-radius: 12px;
   z-index: 10;
-  animation: pulseGlow 1.5s infinite alternate;
-  box-shadow: 0 0 10px var(--color-orange);
-}
-
-@keyframes pulseGlow {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 5px var(--color-orange);
-  }
-  100% {
-    transform: scale(1.1);
-    box-shadow: 0 0 15px var(--color-orange);
-  }
 }
 
 .media-preview-box {
   width: 100%;
-  height: 140px;
-  background-color: #000;
+  height: 160px;
+  background-color: #000000;
+  border-radius: 6px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  overflow: hidden;
 }
 
 .media-preview-box img,
@@ -380,288 +228,179 @@ body {
 }
 
 .media-details {
-  padding: 10px;
-  font-size: 0.78rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  margin: 0.75rem 0;
+  font-size: 0.85rem;
 }
 
 .media-name {
-  font-weight: 700;
-  color: var(--text-white);
+  font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 0.25rem;
 }
 
 .media-meta-text {
   color: var(--text-muted);
+  font-size: 0.8rem;
 }
 
-.media-actions-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 4px;
-  padding: 8px;
-  background-color: #1e293b;
-}
-
-.btn-card-action {
-  padding: 4px 6px;
-  font-size: 0.72rem;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font-family);
-  font-weight: 700;
-}
-
-.btn-status-toggle {
-  grid-column: span 2;
-  margin-top: 4px;
-  padding: 5px;
-  font-size: 0.75rem;
-}
-
-.btn-status-orange {
-  background-color: var(--color-orange);
-  color: #fff;
-}
-
-.btn-status-white {
-  background-color: #ffffff;
-  color: var(--text-dark);
-}
-
-/* صندوق الهاشتاق الخاص بمجلد التواصل */
 .social-meta-display {
-  padding: 8px;
-  background-color: #0b1120;
-  border-top: 1px dashed var(--border-color);
+  margin-bottom: 0.5rem;
 }
 
 .meta-textarea-readonly {
   width: 100%;
   height: 50px;
-  background-color: #1e293b;
-  color: var(--text-white);
+  font-size: 0.8rem;
   border: 1px solid var(--border-color);
   border-radius: 4px;
-  font-size: 0.7rem;
-  padding: 4px;
   resize: none;
+  padding: 4px;
+  background-color: var(--bg-secondary);
 }
 
-/* ==========================================
-   6. جدول السجلات والإشعارات
-   ========================================== */
-.table-responsive {
-  overflow-x: auto;
+.media-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  margin-top: auto;
 }
 
-.log-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
+.btn-card-action {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.2rem;
 }
 
-.log-table th, .log-table td {
-  padding: 10px 12px;
-  text-align: right;
-  border-bottom: 1px solid var(--border-color);
+.btn-status-toggle {
+  grid-column: span 2;
+  font-weight: bold;
 }
 
-.log-table th {
-  background-color: #0b1120;
-  color: var(--color-orange);
+.btn-status-white {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
 }
 
-/* ==========================================
-   7. النوافذ المنبثقة (Modals)
-   ========================================== */
-.modal-backdrop {
+.btn-status-orange {
+  background-color: var(--accent-orange);
+  border: 1px solid var(--accent-orange);
+  color: #ffffff;
+}
+
+/* 7. النوافذ المنبثقة (Modals) */
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.75);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
-  padding: 15px;
+  z-index: 1000;
 }
 
-.modal-card {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
+.modal-content {
+  background-color: var(--bg-primary) !important;
   border-radius: 12px;
-  padding: 25px;
-  width: 100%;
-  max-width: 450px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
-.modal-logo {
-  width: 65px;
-  height: 65px;
-  border-radius: 50%;
-  margin: 0 auto 15px auto;
-  display: block;
-  border: 2px solid var(--color-orange);
+.modal-preview-large {
+  max-width: 800px;
 }
 
-.modal-title {
-  text-align: center;
-  color: var(--color-orange);
-  margin-bottom: 20px;
-  font-size: 1.15rem;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 0.85rem;
-  color: var(--text-white);
-}
-
-.form-control {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  background-color: #0f172a;
-  color: var(--text-white);
-  font-family: var(--font-family);
-  font-size: 0.9rem;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: var(--color-orange);
-}
-
-.modal-actions-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.error-msg {
-  color: #ef4444;
-  font-size: 0.8rem;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-.modal-preview-container {
-  position: relative;
-  max-width: 90vw;
-  max-height: 90vh;
-}
-
-.close-preview-btn {
-  position: absolute;
-  top: -35px;
-  left: 0;
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.preview-content-holder img,
-.preview-content-holder video {
+.modal-preview-large img,
+.modal-preview-large video {
   max-width: 100%;
-  max-height: 80vh;
-  border-radius: 8px;
+  max-height: 70vh;
+  display: block;
+  margin: 0 auto;
 }
 
-/* ==========================================
-   8. لوحة التحكم بالأكوردسيون (Control Page Accordion)
-   ========================================== */
+/* 8. لوحة التحكم والأكورديون (control.html) */
 .user-accordion-item {
-  background-color: #0f172a;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
+  background-color: var(--bg-primary);
   overflow: hidden;
 }
 
 .user-accordion-header {
-  padding: 12px 16px;
+  padding: 1rem;
+  background-color: var(--bg-secondary);
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  background-color: #1a2332;
+  font-weight: bold;
 }
 
 .user-accordion-body {
-  padding: 15px;
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  padding: 1rem;
+  background-color: var(--bg-primary);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--bg-primary);
 }
 
 .checkbox-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
+  gap: 0.3rem;
+  font-size: 0.9rem;
   cursor: pointer;
 }
 
-/* ==========================================
-   9. التذييل والفئات المساعدة (Footer & Utilities)
-   ========================================== */
-.main-footer {
-  background-color: #0b1120;
-  text-align: center;
-  padding: 15px;
-  border-top: 1px solid var(--border-color);
+/* 9. جدول السجلات (Activity Log) */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: var(--bg-primary);
+}
+
+.activity-table th,
+.activity-table td {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  text-align: right;
   font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: auto;
 }
 
-.hidden {
-  display: none !important;
-}
-
-.text-center {
-  text-align: center;
-}
-
-/* التكيف مع شاشات الجوال المتجاوبة */
-@media (max-width: 768px) {
-  .main-header {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .upload-buttons-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .media-card {
-    min-width: 150px;
-    max-width: 150px;
-  }
+.activity-table th {
+  background-color: var(--bg-secondary);
 }
